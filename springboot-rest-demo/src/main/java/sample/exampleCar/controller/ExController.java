@@ -33,10 +33,10 @@ public class ExController {
     public String inputCarInfo() {
     
     	SimpleDateFormat dayTime = new SimpleDateFormat("yyyyMMddHHmmss");
-    	TimeZone tz = TimeZone.getTimeZone("Greenwich");
+    	TimeZone tz = TimeZone.getTimeZone("Greenwich11");
     	dayTime.setTimeZone(tz);
     	String beanId = dayTime.format(new Date(System.currentTimeMillis()));
-    	System.out.println("[ID]"+beanId);
+    	System.out.println("[ID]"+beanId); 
     	
     	long id = Long.parseLong(beanId);
     	
