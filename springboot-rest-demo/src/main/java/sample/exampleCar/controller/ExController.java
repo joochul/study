@@ -41,7 +41,7 @@ public class ExController {
     	long id = Long.parseLong(beanId);
     	
     	//memo 세팅
-    	Memo memo    = new Memo(id,"Relatively good condition is required for the tire replacement");
+    	Memo memo    = new Memo(id,"Relatively good condition is required for the tire replacement.");
     	
     	//ownerList 세팅
     	ArrayList<Owner> ownerList = new ArrayList<Owner>();
