@@ -1,0 +1,52 @@
+* 세팅 항목 추가
+ - application.properties
+  : Jackson 사용시 LAZY 로딩을 view할때 오류나는 부분 처리
+    spring.jackson.serialization.fail-on-empty-beans=false
+    
+- LAZY로 설정된 컬럼일 경우 proxy의 정보도 표현된다. 해당 항목을 제거 하고 JSON으로 출력해야한다. 
+  Entity에 아래 어노테이션 추가 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
+    
+
+
+	## 객체 구조 ##
+	sample data 
+	: {"carId":1,"name":"소나타나","brand":"현기","year":"2016","memo":{"memoId":1,"message":"Relatively good condition is required for the tire replacement"},"ownerList":[{"ownerId":1,"name":"kim","area":"seoul","period":3},{"ownerId":2,"name":"lee","area":"pusan","period":2}],"appearance":{"apprId":1,"type":"sedan","color":"red","status":{"statusId":1,"level":1,"message":"good"}},"engine":{"engineId":1,"type":"two wheel","power":"100","gas":"gasoline","status":null},"tire":{"tireId":1,"type":"wide","brand":"michelin","status":{"statusId":2,"level":3,"message":"Needs replacement"}}}
+	
+	[car]
+		name, 
+		brand, 
+		year,
+		
+		[memo] 
+			message
+			
+	    [owner(list)]
+	    	name, 
+	    	area, 
+	    	period
+	    	
+	    [appearance] 
+	    	type, 
+	    	color,
+	    	
+	    	[status] 
+	    		level, 
+	    		message
+	    		
+	    [engine] 
+	    	type, 
+	    	power, 
+	    	gas,
+	    	
+			[status] 
+				level, 
+				message
+				
+	    [tire] 
+	    	type, 
+	    	brand,
+	    	
+			[status] 
+				level, 
+				message

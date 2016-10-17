@@ -1,0 +1,28 @@
+
+my: 
+   servers:
+       - dev.bar.com
+       - foo.bar.com
+
+bookstore:
+  books:
+    - name: bookNameYml01
+      isbn: b101
+      author: joo
+      pages: 100
+    - name: bookNameYml02
+      isbn: b102
+      author: chul
+      pages: 210
+    - name: bookNameYml03
+      isbn: b103
+      author: joorad
+      pages: 220
+    - name: bookNameYml04
+      isbn: b104
+      author: charls
+      pages: 150
+    - name: bookNameYml05
+      isbn: b105
+      author: lee
+      pages: 320
