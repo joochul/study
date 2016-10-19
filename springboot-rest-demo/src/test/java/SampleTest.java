@@ -14,6 +14,8 @@ public class SampleTest {
     	String str = dayTime.format(new Date(System.currentTimeMillis()));
     	
         System.out.println("[STANDARD DATE]"+str);
+        System.out.println("[STANDARD DATE]"+str);
+        System.out.println("[STANDARD DATE]"+str);
 	}
 	
 }
