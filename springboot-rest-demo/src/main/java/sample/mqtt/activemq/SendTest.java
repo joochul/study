@@ -46,7 +46,7 @@ public class SendTest {
      * @throws JMSException
      * @throws IOException 
      */
-    @Scheduled(fixedDelay=1000*5)
+    //@Scheduled(fixedDelay=1000*5)
     public void testActiveMQ() throws JMSException, IOException {
     	long nowTime = System.currentTimeMillis();
     	Date date = Calendar.getInstance().getTime();
