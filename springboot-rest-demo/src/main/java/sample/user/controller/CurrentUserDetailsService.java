@@ -1,4 +1,4 @@
-package sample.user.repository;
+package sample.user.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import sample.user.model.CurrentUser;
 import sample.user.model.User;
+import sample.user.repository.UserRepository;
 
 @Service
 public class CurrentUserDetailsService implements UserDetailsService {
