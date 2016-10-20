@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+        <title>Spring Security Example</title>
+    </head>
+    <body>
+        <h1>Welcome!</h1>
+        
+        <br></br>
+        <div><a href="/qna">[GO QNA]</a></div>
+        <br></br>
+        
+        <h3>[TEST]##### notice all list #####</h3>
+		<p th:each="post : ${posts}">
+			<span>ID:</span>
+			<span th:text="${post.id}"></span>
+			<span>Title:</span>
+			<span th:text="${post.subject}"></span>
+			<span>Content:</span>
+			<span th:text="${post.content}"></span>
+			<div>---------------------------------------------------------</div>
+		</p>
+    </body>
+</html>
