@@ -1,4 +1,4 @@
-package sample.exampleCar.entity;
+package sample.carMongo.entity;
 
 import java.util.List;
 

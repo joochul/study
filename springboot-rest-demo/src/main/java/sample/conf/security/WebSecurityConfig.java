@@ -61,6 +61,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .authorizeRequests()
                 .antMatchers("/jpa/**").permitAll()
+                .antMatchers("/carmongo/**").permitAll()
+                .antMatchers("/carjpa/**").permitAll()
                 .antMatchers("/mongo/**").permitAll()
                 .antMatchers("/mybatis/**").permitAll()
                 .antMatchers("/yaml/**").permitAll()

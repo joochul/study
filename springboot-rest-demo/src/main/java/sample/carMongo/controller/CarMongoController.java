@@ -1,35 +1,57 @@
-package sample.exampleCar.controller;
+package sample.carMongo.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import sample.exampleCar.entity.Appearance;
-import sample.exampleCar.entity.Car;
-import sample.exampleCar.entity.Engine;
-import sample.exampleCar.entity.Memo;
-import sample.exampleCar.entity.Owner;
-import sample.exampleCar.entity.Status;
-import sample.exampleCar.entity.Tire;
-import sample.exampleCar.repository.ExRepository;
+import sample.carMongo.entity.Appearance;
+import sample.carMongo.entity.Car;
+import sample.carMongo.entity.Engine;
+import sample.carMongo.entity.Memo;
+import sample.carMongo.entity.Owner;
+import sample.carMongo.entity.Status;
+import sample.carMongo.entity.Tire;
+import sample.carMongo.repository.CarMongoRepository;
 
 @RestController
-@RequestMapping("/car")
-public class ExController {
+@RequestMapping("/carmongo")
+public class CarMongoController {
     @Autowired
-    private ExRepository exRepository;
+    private CarMongoRepository exRepository;
+    
+    
     
     /*
-     * http://localhost:8080/car/input
+     * 모든 car 리스트 가져오기
+     * 
+     * http://localhost:8080/carmongo
      */
-    @RequestMapping("/input")
+    @RequestMapping("")
+    public List<Car> getObj() {
+        
+        List<Car> objList = exRepository.findAll();
+        
+        return objList;
+    }
+    
+    /*
+     * car 데이터 입력
+     * 
+     * 테스트를 위한 데이터 강제 세팅
+     * 
+     * http://localhost:8080/carmongo/input
+     */
+    @RequestMapping(method = RequestMethod.POST, value = "/input")
     public String inputCarInfo() {
     
     	SimpleDateFormat dayTime = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -49,7 +71,6 @@ public class ExController {
     	Owner owner2 = new Owner(id,"lee","pusan",2);
     	ownerList.add(owner1);
     	ownerList.add(owner2);
-
     	
     	//Appearance 세팅
 		Status statusAppr   = new Status(id,1, "good");
@@ -71,34 +92,51 @@ public class ExController {
 
         return "success";
     }
-
-    /*
-     * LAZY 사용의 예 
-     * 
+    
+    
+	/*
+	 * ID로 car 데이터 delete
+	 * 
      * http://localhost:8080/car/1
+	 */
+	@RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+	public Map<String, Object> deleteBook(@PathVariable("id") Long id) {
+	
+		exRepository.delete(id);
+		
+		Map<String, Object> response = new LinkedHashMap<String, Object>();
+		response.put("message", "Car delete successfully");
+		return response;
+	}
+
+    
+    /*
+     * ID로 car 데이터 가져오기
+     * 
+     * http://localhost:8080/carmongo/1
      * 
      */
-    @RequestMapping("{id}")
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     public Car getObj(@PathVariable Long id) {
     	
     	Car car = exRepository.findOne(id);
 
+    	//TEST
         String engineType  = car.getEngine().getType();
         System.out.println("[ENGINE_TYPE]"+engineType);
         
-        System.out.println("\n====>LAZY get tire =============");
+        //TEST
         String tireBrand  = car.getTire().getBrand();
         System.out.println("[TIRE_BRAND]"+tireBrand);
-        
-        
-        System.out.println("====>FINISH ===================\n\n\n");
         
         return car;
     }
     
     
     /*
-     * http://localhost:8080/car/appr/1
+     * ID로 car의 entry인 apprearance 정보를 가져오기
+     * 
+     * http://localhost:8080/carmongo/appr/1
      */
     @RequestMapping("/appr/{id}")
     public Appearance getApprInfo(@PathVariable Long id) {
@@ -120,36 +158,4 @@ public class ExController {
         return appr;
     }
     
-    /*
-     * http://localhost:8080/car/appr/1
-     */
-    @RequestMapping("/onlyappr/{id}")
-    public Car getOnlyApprInfo(@PathVariable Long id) {
-
-    	Car car = exRepository.findOne(id);
-    	
-    	//다른 읽어오는 작업 없이 Car에서 Appearance 데이터를 가져와 사용할 수 있다.
-        Appearance appr = car.getAppearance();
-        
-        System.out.println("color ===>"+appr.getColor());
-        System.out.println("type ===>"+appr.getType());
-        
-        Status status = appr.getStatus();
-        System.out.println("status_level ===>"+status.getLevel());
-        System.out.println("status_message ===>"+status.getMessage());
-        
-        System.out.println("getOwnerList ===>"+car.getOwnerList().size());
-        System.out.println("================================================");
-
-        return car;
-    }
-    
-    
-    @RequestMapping("/all")
-    public List<Car> getObj() {
-        
-        List<Car> objList = exRepository.findAll();
-        
-        return objList;
-    }
 }
