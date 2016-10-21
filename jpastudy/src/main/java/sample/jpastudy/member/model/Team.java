@@ -5,11 +5,14 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "TEAM")
@@ -36,7 +39,8 @@ public class Team {
      * 
      * 자동 생성되는 TEAM 테이블 컬럼 => TEAM_ID, TEAM_NAME
      */
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
+	//@OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch=FetchType.EAGER) //즉시로딩. member에서 설명
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch=FetchType.LAZY) //지연로딩. member에서 설명    
     private List<Member> memberList;
 	
 	
@@ -45,6 +49,11 @@ public class Team {
 
 	public Team(String name) {
 		this.name = name;
+	}
+	
+	public Team(String name, List<Member> memberList) {
+		this.name = name;
+		this.memberList = memberList;
 	}
 	
 	public Team(Long id) {
@@ -71,8 +80,13 @@ public class Team {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	
-	
+
+	public List<Member> getMemberList() {
+		return memberList;
+	}
+
+	public void setMemberList(List<Member> memberList) {
+		this.memberList = memberList;
+	}
 
 }
