@@ -5,9 +5,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,17 +19,20 @@ import sample.carJpa.entity.Owner;
 import sample.carJpa.entity.Status;
 import sample.carJpa.entity.Tire;
 import sample.carJpa.repository.CarJpaRepository;
+import sample.carJpa.repository.MemoJpaRepository;
+import sample.carJpa.repository.OwnerJpaRepository;
 
 @RestController
 @RequestMapping("/carjpa")
 public class CarJpaController {
     @Autowired
-    private CarJpaRepository exRepository;
+    private CarJpaRepository carRepository;
     
-    @PersistenceContext
-    protected EntityManager entityManager;
+    @Autowired
+    private MemoJpaRepository memoRepository;
     
-    
+    @Autowired
+    private OwnerJpaRepository ownerRepository;
     
     /*
      * 모든 car 리스트 가져오기
@@ -42,7 +42,7 @@ public class CarJpaController {
     @RequestMapping(method = RequestMethod.GET, value = "")
     public List getObj() {
         
-        List objList = exRepository.findAll();
+        List objList = carRepository.findAll();
         
         return objList;
     }
@@ -91,14 +91,31 @@ public class CarJpaController {
     	Tire   tire         = new Tire("wide","michelin",statusTire);
 
     	//car 정보 세팅
-        Car car = new Car("소나타나","현기", "2016", ownerList, memo, appr, engine, tire);
+        //memo와 appr은 세팅하지 않아도 memo를 save 한 순간 car와 연결된다.
+        Car car = new Car("소나타나","현기", "2016", appr, engine, tire);
         
         memo.setCar(car); //memo 양방향 연결
         owner1.setCar(car);//owner 양방향 연결
         owner2.setCar(car);//owner 양방향 연결
         
         //객체 저장 영속화
-        exRepository.save(car);
+        //car가 생성되면서 발번한 id를 memo와 owner가 사용하기 때문에 car를 먼저 저장하고
+        //memo와 owner를 저장한다.
+        
+        carRepository.save(car);
+        
+        memoRepository.save(memo);        
+        ownerRepository.save(owner1); 
+        ownerRepository.save(owner2);
+        
+        /*
+         [한번에 저장]
+       	 Car car = new Car("소나타나","현기", "2016", ownerList, memo, appr, engine, tire);
+       	 carRepository.save(car);
+       	 
+       	 car 객체를 모두 완성시키고 나서 save를 하면 JPA가 알아서 위와 같이 각각 저장해 준다.
+       	 하지만 정석은 위와 같은 구조로 처리 하는 것이다.
+         */
 
         return "success";
     }
@@ -113,7 +130,7 @@ public class CarJpaController {
 	@RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
 	public Map<String, Object> deleteBook(@PathVariable("id") Long id) {
 	
-		exRepository.delete(id);
+		carRepository.delete(id);
 		
 		Map<String, Object> response = new LinkedHashMap<String, Object>();
 		response.put("message", "Car delete successfully");
@@ -146,7 +163,7 @@ public class CarJpaController {
              where car0_.car_id=?
     	 * ----------------------------------------------------
     	 */
-    	Car car = exRepository.findOne(id);
+    	Car car = carRepository.findOne(id);
 
     	/*
     	 * Engine 객체에 접근할때 해당 데이터를 가져오기위한 query 구동
@@ -213,7 +230,7 @@ public class CarJpaController {
             where car0_.car_id=? 
     	 */
     	System.out.println("\n====>EAGER get Appearance ===================");
-    	Car car = exRepository.findOne(id);
+    	Car car = carRepository.findOne(id);
     	
     	//다른 읽어오는 작업 없이 Car에서 Appearance 데이터를 가져와 사용할 수 있다.
         Appearance appr = car.getAppearance();

@@ -166,6 +166,15 @@ public class Car {
     public Car() {
     }
     
+    public Car(String name, String brand, String year, Appearance appearance, Engine engine, Tire tire) {
+        this.name       = name;
+        this.brand      = brand;
+        this.year       = year;
+        this.appearance = appearance;
+        this.engine     = engine;
+        this.tire       = tire;
+    }
+    
     public Car(String name, String brand, String year, List<Owner> ownerList, Memo memo, Appearance appearance, Engine engine, Tire tire) {
         this.name       = name;
         this.brand      = brand;
