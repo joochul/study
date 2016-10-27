@@ -14,13 +14,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import sample.jpastudy.member.dao.MemberDao;
+import sample.jpastudy.member.dao.MemberDaoImpl;
 import sample.jpastudy.member.dao.TeamDao;
 import sample.jpastudy.member.model.Member;
 import sample.jpastudy.member.model.Team;
 
+/**
+ * 
+ * http://localhost:8080/mapping
+ * 
+ * @author Charles.Lee
+ *
+ */
 @RestController
 @RequestMapping("/mapping")
-// http://localhost:8080/member
 public class ExController {
 
 	@Autowired
@@ -168,23 +175,47 @@ public class ExController {
 
 		Team team = teamDao.findOne(teamId);
 		
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
 		
 		//member에 접근... 이때 member를 찾으로 쿼리가 구동된다.
-		System.out.println("[FIRST]"+team.getMemberList().size());
+		//System.out.println("[FIRST]"+team.getMemberList().size());
 		
 
 		Map<String, Object> response = new LinkedHashMap<String, Object>();
 		response.put("message", "Get Team successfully");
 		response.put("team", team);
+		//response.put("memberList", team.getMemberList());
 
 		return response;
 	}
+	
+	
+	
+	// QueryDSL ////////////////////////////////////////////////////////////////
+	@Autowired
+	private MemberDaoImpl memberDaoImpl;
+	/**
+	 * QueryDSL 사용 샘플
+	 * 
+	 * @param teamId
+	 * @return
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/teamjpql/{id}")
+	public Map<String, Object> getTeamJpql(@PathVariable("id") Long teamId) {
+
+		Team team = teamDao.findOne(teamId);
+		
+		List<Member> result = memberDaoImpl.getTeamMembers(team);
+
+		
+		Map<String, Object> response = new LinkedHashMap<String, Object>();
+		response.put("message", "Get members successfully");
+		response.put("memberList", result);
+
+		return response;
+	}
+	//////////////////////////////////////////////////////////////////////////
+	
+	
 
 	/**
 	 * id에 해당하는 team 정보 수정하기
@@ -330,17 +361,33 @@ public class ExController {
 		
 		// custom method
 		List<Member> memberList = memberDao.findAllMemberByQuery(likeStr);
+		
+
+//		List<MemberTemp> memberTempList = new ArrayList(); 
+//		for(Member m : memberList){
+//			String id   = m.getId();
+//			String name = m.getName();
+//			
+//			MemberTemp temp = new MemberTemp(id, name);
+//			
+//			String teamId  = m.getTeam().getId().toString();
+//			temp.setTeamId(teamId);
+//			
+//			memberTempList.add(temp);
+//		}
+		
+		
 
 		Map<String, Object> response = new LinkedHashMap<String, Object>();
 		response.put("message", "get members successfully");
 		response.put("memberList", memberList);
+//		response.put("memberList", memberTempList);
 
 		return response;
 	}
-	
 
 	/**
-	 * id에 해당하는 team에 속한 memberId에 대산 member 정보 수정하기
+	 * id에 해당하는 team에 속한 memberId에 대한 member 정보 수정하기
 	 * 
 	 * http://localhost:8080/mapping/member/1/mem1001
 	 * {"name":"멤버1001-1"}
@@ -373,7 +420,7 @@ public class ExController {
 	}
 
 	/**
-	 * id에 해당하는 team에 속한 memberId에 대산 member 정보 삭제하기
+	 * id에 해당하는 team에 속한 memberId에 대한 member 정보 삭제하기
 	 * 
 	 * http://localhost:8080/mapping/member/1/mem1001
 	 * 

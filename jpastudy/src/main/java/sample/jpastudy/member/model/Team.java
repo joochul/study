@@ -40,7 +40,8 @@ public class Team {
      * 자동 생성되는 TEAM 테이블 컬럼 => TEAM_ID, TEAM_NAME
      */
 	//@OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch=FetchType.EAGER) //즉시로딩. member에서 설명
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch=FetchType.LAZY) //지연로딩. member에서 설명    
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch=FetchType.LAZY) //지연로딩. member에서 설명
+    //@JsonIgnore //json으로 표현할때 무한루프를 방지하는 어노테이션
     private List<Member> memberList;
 	
 	

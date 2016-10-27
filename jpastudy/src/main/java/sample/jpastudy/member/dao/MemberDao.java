@@ -8,7 +8,9 @@ import org.springframework.data.repository.query.Param;
 
 import sample.jpastudy.member.model.Member;
 
-public interface MemberDao extends JpaRepository<Member, String>{
+public interface MemberDao extends JpaRepository<Member, String>, IMemberDao{
+	
+	
 	
 	/**
 	 * 
@@ -46,11 +48,14 @@ public interface MemberDao extends JpaRepository<Member, String>{
 	 * @param memberName
 	 * @return
 	 */
-	@Query(value= "select a.* "
-			+ "from member a "
-			+ "where a.member_name like :memberName "
-			, nativeQuery=true)
+	@Query(value= "select a.member_id, a.member_name, a.team_id "
+			    + "  from member a "
+			    + " where a.member_name like :memberName "
+			      , nativeQuery=true)
 	List<Member> findAllMemberByQuery(@Param("memberName") String memberName );
 	
+	
+	
+	List<Member> findByName(String name);
 	
 }

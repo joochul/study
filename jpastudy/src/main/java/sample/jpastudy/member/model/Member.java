@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "MEMBER")
-public class Member {
+public class Member{
 	
 	@Id
 	@Column(name = "MEMBER_ID", nullable = false, unique = true)
